@@ -9,9 +9,6 @@ namespace XamarinStore
 	public class StringUIPicker : UIPickerView
 	{
 		public event EventHandler SelectedItemChanged;
-		public StringUIPicker ()
-		{
-		}
 		string[] items;
 		public IEnumerable<string> Items
 		{

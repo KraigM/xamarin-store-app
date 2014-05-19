@@ -130,7 +130,7 @@ namespace XamarinStore.iOS
 			imageUrls =  CurrentProduct.ImageUrls.ToArray().Shuffle();
 
 			imageView = new JBKenBurnsView {
-				Frame = new RectangleF (0, -60, 320, 400),
+				Frame = new RectangleF (0, 0, 320, 400),
 				Images = Enumerable.Range(0,imageUrls.Length).Select(x=> new UIImage()).ToList(),
 				UserInteractionEnabled = false,
 			};
@@ -203,7 +203,7 @@ namespace XamarinStore.iOS
 
 	public class ProductDetailPageSource : UITableViewSource
 	{
-		UITableViewCell[] tableItems;
+		readonly UITableViewCell[] tableItems;
 
 		public ProductDetailPageSource (UITableViewCell[] items)
 		{
@@ -227,8 +227,10 @@ namespace XamarinStore.iOS
 
 		public override void RowSelected (UITableView tableView, NSIndexPath indexPath)
 		{
-			if (tableItems [indexPath.Row] is StringSelectionCell)
-				((StringSelectionCell)tableItems [indexPath.Row]).Tap ();
+			var cell = tableItems [indexPath.Row] as StringSelectionCell;
+			if (cell != null) {
+				cell.Tap ();
+			}
 
 			tableView.DeselectRow (indexPath, true);
 		}

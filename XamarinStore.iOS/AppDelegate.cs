@@ -29,13 +29,13 @@ namespace XamarinStore.iOS
 			UINavigationBar.Appearance.SetTitleTextAttributes (new UITextAttributes {
 				TextColor = UIColor.White
 			});
+			UINavigationBar.Appearance.TintColor = UIColor.White;
+			UINavigationBar.Appearance.BarTintColor = Color.Blue;
 
 			var productVc = new ProductListViewController ();
 			productVc.ProductTapped += ShowProductDetail;
 			navigation = new UINavigationController (productVc);
 
-			navigation.NavigationBar.TintColor = UIColor.White;
-			navigation.NavigationBar.BarTintColor = Color.Blue;
 
 			window.RootViewController = navigation;
 			window.MakeKeyAndVisible ();
@@ -54,30 +54,28 @@ namespace XamarinStore.iOS
 		public void ShowBasket ()
 		{
 			var basketVc = new BasketViewController (WebService.Shared.CurrentOrder);
-			basketVc.Checkout += (object sender, EventArgs e) => ShowLogin ();
+			basketVc.Checkout += (sender, e) => ShowLogin ();
 			navigation.PushViewController (basketVc, true);
 		}
 
 		public void ShowLogin ()
 		{
 			var loginVc = new LoginViewController ();
-			loginVc.LoginSucceeded += () => ShowAddress ();
+			loginVc.LoginSucceeded += ShowAddress;
 			navigation.PushViewController (loginVc, true);
 		}
 
 		public void ShowAddress ()
 		{
 			var addreesVc = new ShippingAddressViewController (WebService.Shared.CurrentUser);
-			addreesVc.ShippingComplete += (object sender, EventArgs e) => ProccessOrder ();
+			addreesVc.ShippingComplete += (sender, e) => ProccessOrder ();
 			navigation.PushViewController (addreesVc, true);
 		}
 
 		public void ProccessOrder()
 		{
 			var processing = new ProcessingViewController (WebService.Shared.CurrentUser);
-			processing.OrderPlaced += (object sender, EventArgs e) => {
-				OrderCompleted ();
-			};
+			processing.OrderPlaced += (sender, e) => OrderCompleted ();
 			navigation.PresentViewController (new UINavigationController(processing), true, null);
 		}
 

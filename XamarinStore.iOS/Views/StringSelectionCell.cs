@@ -62,7 +62,10 @@ namespace XamarinStore
 			ViewForPicker = viewForPicker;
 			Accessory = UITableViewCellAccessory.DisclosureIndicator;
 
-			picker = new StringUIPicker ();
+			picker = new StringUIPicker
+			{
+				BackgroundColor = UIColor.White,
+			};
 			picker.SelectedItemChanged += (object sender, EventArgs e) => {
 				DetailTextLabel.Text = picker.SelectedItem;
 				if (SelectionChanged != null)

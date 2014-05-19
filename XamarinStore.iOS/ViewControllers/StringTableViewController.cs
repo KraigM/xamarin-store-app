@@ -11,7 +11,7 @@ namespace XamarinStore
 		UISearchBar searchBar;
 		IEnumerable<string> items = new List<string>();
 		IEnumerable<string> filteredItems = new List<string>();
-		TableViewSource source;
+		readonly TableViewSource source;
 		public IEnumerable<string> Items {
 			get {
 				return items;
@@ -27,9 +27,9 @@ namespace XamarinStore
 				Parent = this,
 			};
 			searchBar = new UISearchBar ();
-			searchBar.TextChanged += (object sender, UISearchBarTextChangedEventArgs e) => {
-				filteredItems = items.Where(x=> x.IndexOf(searchBar.Text, StringComparison.CurrentCultureIgnoreCase) >= 0).ToList();
-				TableView.ReloadData();
+			searchBar.TextChanged += (sender, e) => {
+				filteredItems = items.Where (x => x.IndexOf (searchBar.Text, StringComparison.CurrentCultureIgnoreCase) >= 0).ToList ();
+				TableView.ReloadData ();
 			};
 			searchBar.SizeToFit ();
 			TableView.TableHeaderView = searchBar;
