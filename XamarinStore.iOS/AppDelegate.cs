@@ -16,7 +16,7 @@ namespace XamarinStore.iOS
 		public static AppDelegate Shared;
 
 		UIWindow window;
-		UINavigationController navigation;
+		IRootViewController navigation;
 
 		public override bool FinishedLaunching (UIApplication app, NSDictionary options)
 		{
@@ -34,10 +34,13 @@ namespace XamarinStore.iOS
 
 			var productVc = new ProductListViewController ();
 			productVc.ProductTapped += ShowProductDetail;
-			navigation = new UINavigationController (productVc);
 
+			navigation = (UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Pad) ?
+				(IRootViewController)new PadRootViewController () : new PhoneRootViewController ();
 
-			window.RootViewController = navigation;
+			navigation.PushViewController(productVc, false);
+
+			window.RootViewController = navigation as UIViewController;
 			window.MakeKeyAndVisible ();
 			return true;
 		}
@@ -76,7 +79,7 @@ namespace XamarinStore.iOS
 		{
 			var processing = new ProcessingViewController (WebService.Shared.CurrentUser);
 			processing.OrderPlaced += (sender, e) => OrderCompleted ();
-			navigation.PresentViewController (new UINavigationController(processing), true, null);
+			window.RootViewController.PresentViewController (new UINavigationController(processing), true, null);
 		}
 
 		public void OrderCompleted ()

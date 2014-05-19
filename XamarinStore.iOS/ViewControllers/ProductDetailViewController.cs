@@ -129,8 +129,10 @@ namespace XamarinStore.iOS
 			sizeOptions = CurrentProduct.Sizes;
 			imageUrls =  CurrentProduct.ImageUrls.ToArray().Shuffle();
 
+			var imgFrame = new RectangleF (0, 0, 320, 400);
+			imgFrame.X += (View.Frame.Width - imgFrame.Width) / 2;
 			imageView = new JBKenBurnsView {
-				Frame = new RectangleF (0, 0, 320, 400),
+				Frame = imgFrame,
 				Images = Enumerable.Range(0,imageUrls.Length).Select(x=> new UIImage()).ToList(),
 				UserInteractionEnabled = false,
 			};
@@ -138,7 +140,7 @@ namespace XamarinStore.iOS
 			var productDescriptionView = new ProductDescriptionView (CurrentProduct) {
 				Frame = new RectangleF (0, 0, 320, 120),
 			};
-			TableView.TableHeaderView = new UIView(new RectangleF(0,0,imageView.Frame.Width,imageView.Frame.Bottom)){imageView};
+			TableView.TableHeaderView = new UIView(new RectangleF(0,0,imageView.Frame.Right,imageView.Frame.Bottom)){imageView};
 			var tableItems = new List<UITableViewCell> () {
 				new CustomViewCell (productDescriptionView),
 			};

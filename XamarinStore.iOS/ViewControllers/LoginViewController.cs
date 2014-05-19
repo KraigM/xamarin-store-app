@@ -54,7 +54,7 @@ namespace XamarinStore.iOS
 		}
 		private void OnKeyboardNotification (NSNotification notification)
 		{
-			if (IsViewLoaded) {
+			if (IsViewLoaded && UIDevice.CurrentDevice.UserInterfaceIdiom != UIUserInterfaceIdiom.Pad) {
 
 				//Check if the keyboard is becoming visible
 				bool visible = notification.Name == UIKeyboard.WillShowNotification;

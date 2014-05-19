@@ -46,26 +46,44 @@ namespace XamarinStore
 		}
 
 		UIActionSheet sheet;
-		public void ShowPicker(UIView viewForPicker)
+		UIPopoverController popover;
+		public void ShowPicker(UIView viewForPicker, RectangleF location)
 		{
-			sheet = new UIActionSheet();
-
-			sheet.AddSubview(this);
-
-			var toolbarPicker = new UIToolbar (new RectangleF (0, 0, viewForPicker.Frame.Width, 44)) {
-				Items = new UIBarButtonItem[] {
+			var toolbar = new UIToolbar (new RectangleF (0, 0, 320, 44)) {
+				Items = new[] {
 					new UIBarButtonItem (UIBarButtonSystemItem.FlexibleSpace), 
-					new UIBarButtonItem (UIBarButtonSystemItem.Done, (sender, args) => sheet.DismissWithClickedButtonIndex (0, true)), 
+					new UIBarButtonItem (UIBarButtonSystemItem.Done, (s, e) => 
+						{
+							if (sheet != null) {
+								sheet.DismissWithClickedButtonIndex (0, true);
+								sheet = null;
+							}
+							if (popover != null) {
+								popover.Dismiss(true);
+								popover = null;
+							}
+						})
 				},
-				BarTintColor = this.BackgroundColor,
+				BarStyle = UIBarStyle.Default,
 			};
-
-			sheet.AddSubviews(toolbarPicker);
-
-			sheet.BackgroundColor = UIColor.Clear;
-			sheet.ShowInView(viewForPicker);
-			UIView.Animate(.25, () => sheet.Bounds = new RectangleF (0, 0, viewForPicker.Frame.Width, 485));
-
+			if (UIDevice.CurrentDevice.UserInterfaceIdiom == UIUserInterfaceIdiom.Phone) {
+				sheet = new UIActionSheet ();
+				sheet.AddSubview (this);
+				sheet.AddSubviews (toolbar);
+				sheet.BackgroundColor = UIColor.Clear;
+				sheet.ShowInView (viewForPicker);
+				UIView.Animate (.25, () => sheet.Bounds = new RectangleF (0, 0, viewForPicker.Frame.Width, 485));
+			} else {
+				this.Frame = new RectangleF (0, 44, 320, 216);
+				var view = new UIView ();
+				view.Add (this);
+				view.Add (toolbar);
+				var vc = new UIViewController ();
+				vc.View = view;
+				vc.PreferredContentSize = new SizeF (320, 260);
+				popover = new UIPopoverController (vc);
+				popover.PresentFromRect (location, viewForPicker, UIPopoverArrowDirection.Down, true);
+			}
 		}
 
 
